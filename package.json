@@ -1,0 +1,29 @@
+{
+  "author": "tomtuz",
+  "name": "tool_project_manager",
+  "version": "1.0.0",
+  "description": "Tool to manage my projects",
+  "exports": "./build/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup",
+    "test": "tsx src/index.ts",
+    "debug_local": "tsx src/index.ts",
+    "debug_external": "tsx src/index.ts",
+    "debug_build_local": "node dist/index.js",
+    "debug_build_external": "node dist/index.js"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "octokit": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.1.0",
+    "tsup": "^8.2.4",
+    "tsx": "^4.16.5",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "pnpm@9.6.0"
+}
