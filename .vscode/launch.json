@@ -2,10 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "TSX + Local",
       "type": "node-terminal",
       "request": "launch",
-      "name": "Debug TSX",
       "command": "pnpm run debug_local"
+    },
+    {
+      "name": "Debug Watch",
+      "type": "node-terminal",
+      "request": "launch",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "${defaultBuildTask}"
     }
   ]
 }

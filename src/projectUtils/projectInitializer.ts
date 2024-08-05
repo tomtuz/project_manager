@@ -1,10 +1,8 @@
 import path from 'node:path';
 import { promises as fs } from 'node:fs';
-import {
-  findMatchingRepositories,
-  updateRepositoriesFile,
-  refreshRepositories
-} from '../gitUtils/repositoryScanner';
+import { findMatchingRepositories } from '../gitUtils/processData';
+import { syncIfNeeded, syncManually } from '../gitUtils/sync';
+
 import { saveMetadata, getMetadata } from './metadataManager';
 import { getReadlineSingleton } from '../projectUtils/readlineInstance';
 
@@ -77,12 +75,12 @@ export async function initializeProject(): Promise<void> {
   }
 
   while (true) {
-    await updateRepositoriesFile();
+    await syncIfNeeded();
     const matches = await findMatchingRepositories(projectName);
     const selectedRepoUrl = await selectRepository(matches);
 
     if (selectedRepoUrl === 'refresh') {
-      await refreshRepositories();
+      await syncManually();
       continue;
     }
 

@@ -1,6 +1,6 @@
 node_modules
 dist
-env
+.env
 
 # personal documentation
-docs/personal_*
+docs/private*

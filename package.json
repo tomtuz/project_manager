@@ -1,14 +1,22 @@
 {
+  "bin": {
+    "pfm": "dist/index.js"
+  },
   "author": "tomtuz",
-  "name": "tool_project_manager",
+  "name": "pfm",
   "version": "1.0.0",
   "description": "Tool to manage my projects",
   "exports": "./build/index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/index.ts",
-    "build": "tsup",
+    "dev": "tsx --watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsc --noEmit && tsup",
+    "watch": "tsx watch chokidar.ts",
+    "watch:tsup": "tsup",
+    "watch:tsc": "tsc --noEmit",
     "test": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
     "debug_local": "tsx src/index.ts",
     "debug_external": "tsx src/index.ts",
     "debug_build_local": "node dist/index.js",
@@ -17,10 +25,14 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
-    "octokit": "^4.0.2"
+    "commander": "^12.1.0",
+    "octokit": "^4.0.2",
+    "picocolors": "^1.0.1"
   },
   "devDependencies": {
+    "@octokit/types": "^13.5.0",
     "@types/node": "^22.1.0",
+    "dotenv": "^16.4.5",
     "tsup": "^8.2.4",
     "tsx": "^4.16.5",
     "typescript": "^5.5.4"
