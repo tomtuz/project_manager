@@ -8,14 +8,19 @@ CLI to help manage local project folders hosted on GitHub. Core function is to r
 - Clean projects by deleting `node_modules` and `.git` folders
 - Refresh and manage the list of GitHub repositories
 - Set up projects by cloning repositories and installing dependencies
-- Automatically check if a project needs setup when the tool is run
+- Check if a project needs setup when the tool is run
 
 ## Installation
 
 To install run:
 
 ```sh
-pnpm i -g pfm
+# pnpm i -g pfm
+pnpm i
+pnpm link --global # > 'pfm' linked
+
+# if you want to use in another project
+pnpm link pfm
 ```
 
 ## Usage
@@ -23,7 +28,9 @@ pnpm i -g pfm
 To use Project Folder Manager, navigate to your project directory in the terminal and run:
 
 ```sh
-pfm
+# after local link
+pfm    # (auto mode)
+pfm -c # ('custom' interactive mode)
 ```
 
 You will be presented with a menu of actions to choose from:
@@ -54,7 +61,7 @@ Make sure to set the `GITHUB_TOKEN` environment variable with your GitHub person
 
 ```sh
 # 1. copy env file
-cp env.example env
+cp .env.example .env
 
 # 2. set your github token from:
 # https://github.com/settings/tokens
