@@ -1,6 +1,9 @@
 // CLI input options
 export interface OptionsCLI {
   custom: boolean
+  auto: boolean
+  manual: boolean
+  path: string
 }
 
 // Individual repository format

@@ -5,6 +5,7 @@ import { octoAPI } from "./githubAPI";
 import { getGitHubToken, readRepositories, writeToFile } from "./processData";
 
 import type { IndexLocalRepository, LocalRepository } from "@/types";
+import { formatPrivateData } from "@/scripts/test";
 
 const execAsync = util.promisify(exec);
 const hookScript = path.join(import.meta.url, "post-commit-hook.ps1");
@@ -29,7 +30,8 @@ export const syncIfNeeded = async (): Promise<LocalRepository[]> => {
       return []
     }
 
-    const repo_list = await octoAPI.getRepositories(token);
+    const debug = false;
+    const repo_list = debug ? formatPrivateData() : await octoAPI.getRepositories(token);
     console.log("getRepos: ", repo_list)
 
     // update parent update date

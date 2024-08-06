@@ -13,6 +13,39 @@
       "request": "launch",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "preLaunchTask": "${defaultBuildTask}"
+    },
+    // {
+    //   "name": "Custom command (verbose)",
+    //   "type": "node",
+    //   "request": "launch",
+    //   "runtimeExecutable": "pnpm",
+    //   "runtimeArgs": ["--loglevel", "debug"],
+    //   "args": ["start", "-a", "-m", "-p", "C:\\Users\\to\\Desktop\\sfs"],
+    //   "cwd": "${workspaceFolder}",
+    //   "console": "integratedTerminal",
+    //   "env": {
+    //     "NODE_DEBUG": "*",
+    //     "DEBUG": "*"
+    //   },
+    //   "outputCapture": "std",
+    //   "internalConsoleOptions": "openOnSessionStart"
+    // },
+    {
+      "name": "Custom command (with output redirection)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "cmd.exe",
+      "runtimeArgs": [
+        "/c",
+        "pnpm --loglevel debug start -a -m -p C:\\Users\\to\\Desktop\\sfs > ${workspaceFolder}/logs/pnpm-output.log 2>&1"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_DEBUG": "*",
+        "DEBUG": "*"
+      }
+      // "preLaunchTask": "create-log-directory"
     }
   ]
 }

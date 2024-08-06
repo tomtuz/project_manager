@@ -1,16 +1,11 @@
-import path from 'node:path';
 import { promises as fs } from 'node:fs';
 
 import type { IndexLocalRepository, LocalRepository } from '@/types';
-import { ConfigFileAccessError } from '@/errors/ConfigurationErrors';
+import { isFileReadable } from '@/utils/pathUtils';
+import { pathProvider } from '@/utils/pathProvider';
 
-const REPOS_FILE = path.join(
-  // process.env.HOME ||
-  // process.env.USERPROFILE ||
-  // process.cwd(),
-  "C:/Users/tto/Desktop/sfs",
-  '.github_repos.json'
-);
+// Use the pathProvider to get the GitHub repos file path
+const REPOS_FILE = pathProvider.getGithubReposFilePath();
 
 /*
 --------
@@ -21,7 +16,6 @@ const REPOS_FILE = path.join(
 5. [MATCH]
 6. [MATCH]
 */
-
 
 // [TOKEN] 
 export function getGitHubToken(): string {
@@ -53,20 +47,6 @@ export async function writeToFile(repoObj: IndexLocalRepository) {
   } catch (error) {
     console.error('Error updating repositories file:', error);
     throw error;
-  }
-}
-
-// TODO: move to smaller utils
-export async function isFileReadable(filename: string): Promise<boolean> {
-  console.log("Checking file access...")
-  console.log("Dir: ", filename)
-  try {
-    // Check if current process has read permission to the file
-    await fs.access(filename, fs.constants.R_OK)
-
-    return true
-  } catch (error) {
-    throw new ConfigFileAccessError(filename, error as Error);
   }
 }
 
