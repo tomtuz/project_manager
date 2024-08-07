@@ -4,14 +4,14 @@ import { exec } from "node:child_process";
 import { octoAPI } from "./githubAPI";
 import { getGitHubToken, readRepositories, writeToFile } from "./processData";
 
-import type { IndexLocalRepository, LocalRepository } from "@/types";
+import type { IndexLocalRepository, LocalRepository, OptionsCLI } from "@/types";
 import { formatPrivateData } from "@/scripts/test";
 
 const execAsync = util.promisify(exec);
 const hookScript = path.join(import.meta.url, "post-commit-hook.ps1");
 
 // [MAIN] AUTO sync
-export const syncIfNeeded = async (): Promise<LocalRepository[]> => {
+export const syncIfNeeded = async (options: OptionsCLI): Promise<LocalRepository[]> => {
   const repoObj = await readRepositories();
   if (!repoObj) {
     return []
@@ -22,7 +22,7 @@ export const syncIfNeeded = async (): Promise<LocalRepository[]> => {
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  if (lastSyncDate < oneWeekAgo) {
+  if (options.manual || lastSyncDate < oneWeekAgo) {
     console.log("Last full sync was more than a week ago. Resyncing...");
 
     const token = getGitHubToken();
@@ -30,7 +30,7 @@ export const syncIfNeeded = async (): Promise<LocalRepository[]> => {
       return []
     }
 
-    const debug = false;
+    const debug = true;
     const repo_list = debug ? formatPrivateData() : await octoAPI.getRepositories(token);
     console.log("getRepos: ", repo_list)
 

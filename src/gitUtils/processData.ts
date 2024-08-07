@@ -4,8 +4,7 @@ import type { IndexLocalRepository, LocalRepository } from '@/types';
 import { isFileReadable } from '@/utils/pathUtils';
 import { pathProvider } from '@/utils/pathProvider';
 
-// Use the pathProvider to get the GitHub repos file path
-const REPOS_FILE = pathProvider.getGithubReposFilePath();
+const { getGithubReposFilePath } = pathProvider;
 
 /*
 --------
@@ -42,7 +41,8 @@ export function formatData(repoArr: LocalRepository[]) {
 export async function writeToFile(repoObj: IndexLocalRepository) {
   console.log("Writing to file...")
   try {
-    await fs.writeFile(REPOS_FILE, JSON.stringify(repoObj, null, 2), 'utf-8');
+    const reposFile = getGithubReposFilePath();
+    await fs.writeFile(reposFile, JSON.stringify(repoObj, null, 2), 'utf-8');
     console.log('Repositories file updated successfully.');
   } catch (error) {
     console.error('Error updating repositories file:', error);
@@ -53,11 +53,12 @@ export async function writeToFile(repoObj: IndexLocalRepository) {
 // [READ]
 export async function readRepositories(): Promise<IndexLocalRepository | null> {
   try {
-    if (!await isFileReadable(REPOS_FILE)) {
+    const reposFile = getGithubReposFilePath();
+    if (!await isFileReadable(reposFile)) {
       return null;
     }
 
-    const repoObj = await fs.readFile(REPOS_FILE, 'utf-8');
+    const repoObj = await fs.readFile(reposFile, 'utf-8');
     return JSON.parse(repoObj);
   } catch (error) {
     console.error('Error reading repositories file:', error);

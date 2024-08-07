@@ -6,29 +6,29 @@ export function formatPrivateData(): LocalRepository[] {
     (repo) => {
       return {
         name: repo.name,
-        description: "",
-        visibility: "",
+        description: repo.description,
+        visibility: repo.visibility,
 
         // links
-        html_url: "",
-        ssh_url: "",
+        html_url: repo.html_url,
+        ssh_url: repo.ssh_url,
 
         // numerics
-        size: 2,
-        watchers_count: 2,
-        stargazers_count: 2,
+        size: repo.size,
+        watchers_count: repo.watchers_count,
+        stargazers_count: repo.stargazers_count,
 
         // repo state
-        fork: true,
-        disabled: true,
-        archived: true,
+        fork: repo.fork,
+        disabled: repo.disabled,
+        archived: repo.archived,
 
         // dates updates
-        updated_at: "",
-        pushed_at: "",
+        updated_at: repo.updated_at,
+        pushed_at: repo.pushed_at,
 
         // custom
-        last_updated: ''
+        last_updated: new Date().toISOString()
       }
     }
   )

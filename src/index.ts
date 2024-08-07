@@ -43,7 +43,7 @@ program
       // start AUTO mode
       if (options.auto) {
         console.log("Running [AUTO] mode!")
-        await runAutoMode()
+        await runAutoMode(options)
         process.exit(0)
       }
 

@@ -9,7 +9,7 @@ export interface OptionsCLI {
 // Individual repository format
 export interface LocalRepository {
   name: string,           // "extension-filters"
-  description: string
+  description: string | null
   visibility: "public" | "private" | string,
 
   // links
