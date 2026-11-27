@@ -2,8 +2,11 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 interface ProjectMetadata {
-  repositoryUrl: string;
-  lastUpdateTime: string;
+  repositoryUrl?: string;
+  lastUpdateTime?: string;
+  description?: string;
+  stars?: number;
+  forks?: number;
 }
 
 const METADATA_FOLDER = '.docs';
@@ -37,7 +40,10 @@ export async function getMetadata(projectPath: string): Promise<ProjectMetadata 
   }
 }
 
-export async function updateMetadata(projectPath: string, updates: Partial<ProjectMetadata>): Promise<void> {
+export async function updateMetadata(
+  projectPath: string,
+  updates: Partial<ProjectMetadata>
+): Promise<void> {
   const currentMetadata = await getMetadata(projectPath) || {};
   const updatedMetadata = {
     ...currentMetadata,

@@ -1,90 +1,67 @@
-/**
- * Project Folder Manager
- * 
- * This tool helps manage project folders by providing functionality to:
- * 1. Initialize projects and link them to GitHub repositories
- * 2. Clean projects by deleting node_modules and .git folders
- * 3. Refresh the list of GitHub repositories
- * 4. Set up projects by cloning repositories and installing dependencies
- * 
- * The tool uses a command-line interface for user interaction.
- */
+import { scanAndDisplayProjects } from '../projectUtils/projectScanner';
+import { setupProject, projectNeedsSetup } from '../projectUtils/projectSetup';
+import { getConfig } from '../utils/configManager';
+import { logger, handleError, askQuestion } from '../utils/logger';
+import path from 'node:path';
 
-import { initializeProject } from '../projectUtils/projectInitializer';
-import { cleanProject } from '../projectUtils/projectCleaner';
-import { syncManually } from '../gitUtils/sync';
-import { setupProject } from '../projectUtils/projectSetup';
-import { getReadlineSingleton } from '../projectUtils/readlineInstance';
-
-const rl = getReadlineSingleton();
-
-/**
- * Prompts the user to choose an action from the available options.
- * @returns {Promise<string>} The user's choice as a string.
- */
-async function promptUser(): Promise<string> {
-  const prompts = [
-    'Choose an action',
-    '1. Initialize project',
-    '2. Clean project',
-    '3. Refresh repositories',
-    '4. Set up project',
-    '5. Exit',
-    'Enter the number of your choice:'
-  ]
-
-  return new Promise((resolve) => {
-    rl.question(prompts.join('\n'), (answer) => {
-      resolve(answer.trim());
-    });
-  });
-}
-
-/**
- * The main function that runs the Project Folder Manager tool.
- * It presents a menu to the user and executes the chosen action.
- */
-export async function showMenu() {
-  console.log('-- Project Folder Manager --');
-
+export async function showMenu(): Promise<void> {
   while (true) {
-    const choice = await promptUser();
+    logger.info('\n--- Project Folder Manager ---');
+    logger.info('1. Scan Projects');
+    logger.info('2. Setup Project');
+    logger.info('3. Exit');
+
+    const choice = await askQuestion('Enter your choice (1-3): ');
 
     switch (choice) {
       case '1':
-        try {
-          await initializeProject();
-        } catch (error) {
-          console.error('An error occurred during project initialization:', error);
-        }
+        await scanProjects();
         break;
       case '2':
-        try {
-          await cleanProject(process.cwd());
-        } catch (error) {
-          console.error('An error occurred during project cleaning:', error);
-        }
+        await setupProjectInteractive();
         break;
       case '3':
-        try {
-          await syncManually();
-        } catch (error) {
-          console.error('An error occurred while refreshing repositories:', error);
-        }
-        break;
-      case '4':
-        try {
-          await setupProject(process.cwd());
-        } catch (error) {
-          console.error('An error occurred during project setup:', error);
-        }
-        break;
-      case '5':
-        console.log('Exiting Project Folder Manager. Goodbye!');
-        rl.close();
+        logger.info('Exiting...');
         return;
       default:
-        console.log('Invalid choice. Please try again.');
+        logger.warn('Invalid choice. Please try again.');
     }
+  }
+}
+
+async function scanProjects(): Promise<void> {
+  try {
+    logger.info('\nScanning projects...');
+    await scanAndDisplayProjects();
+  } catch (error: any) {
+    handleError(error);
+  }
+}
+
+async function setupProjectInteractive(): Promise<void> {
+  try {
+    const config = await getConfig();
+    let projectPath = config.mainProjectFolder;
+
+    const useCustomPath = await askQuestion('Do you want to use a custom project path? (y/N): ');
+    if (useCustomPath.toLowerCase() === 'y') {
+      projectPath = await askQuestion('Enter the project path: ');
+      projectPath = path.resolve(projectPath);
+    }
+
+    logger.info(`Checking project: ${projectPath}`);
+    if (await projectNeedsSetup(projectPath)) {
+      logger.info('Project needs setup. Running setup...');
+      await setupProject(projectPath);
+    } else {
+      const forceSetup = await askQuestion('Project is already set up. Do you want to force setup? (y/N): ');
+      if (forceSetup.toLowerCase() === 'y') {
+        await setupProject(projectPath);
+      } else {
+        logger.info('Setup skipped.');
+      }
+    }
+  } catch (error: any) {
+    handleError(error);
   }
 }

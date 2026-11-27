@@ -19,7 +19,13 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "pnpm",
-      "args": ["start", "-a", "-m", "-p", "C:\\Users\\tto\\Desktop\\sfs"],
+      "args": [
+        "start",
+        "auto",
+        "-p",
+        "E:\\Tomo\\ccm\\_vs_code\\themes\\substrata"
+      ],
+      // "args": ["start", "-a", "-m", "-p", "E:\\Tomo\\ccm\\_vs_code\\themes\\substrata"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal"
     },
